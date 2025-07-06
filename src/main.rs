@@ -4,6 +4,7 @@ use sqlx::PgPool;
 
 mod config;
 use config::db::init_pg_pool;
+mod routes;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -45,10 +46,16 @@ async fn main() -> std::io::Result<()> {
         Err(_) => 8080,
     };
 
-    // .app_data(...) injects shared state into the App, making the data accessible to route handlers
-    // web::Data::new wraps Arc<T>::new(), which creates cloneable, thread-safe instances that all reference the same instance (db pool in this case)
-    HttpServer::new(move || App::new().app_data(web::Data::new(db_pool.clone())))
-        .bind(("127.0.0.1", port))?
-        .run()
-        .await
+    HttpServer::new(move || {
+        App::new()
+            // .app_data(...) injects shared state into the App, making the data accessible to route handlers
+            // web::Data::new wraps Arc<T>::new(), which creates cloneable, thread-safe instances that all reference the same instance (db pool in this case)
+            .app_data(web::Data::new(db_pool.clone()))
+            .configure(routes::configure)
+        // .configure is used App, Scope, or any other type that implements HttpServiceFactory. It takes a config
+        // function that receives a mutable reference to a ServiceConfig for registering subroutes inside a scope
+    })
+    .bind(("127.0.0.1", port))?
+    .run()
+    .await
 }
