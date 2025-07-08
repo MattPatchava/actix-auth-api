@@ -5,6 +5,7 @@ use sqlx::PgPool;
 mod config;
 use config::db::init_pg_pool;
 mod routes;
+mod services;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
