@@ -37,7 +37,6 @@ pub async fn login(
     match hashing::verify_password(&password, &password_hash) {
         Ok(is_match) => {
             if is_match {
-                // Issue JWT here
                 let jwt: String = jwt::generate_jwt(&email, keep_logged_in)
                     .map_err(|e| error::ErrorInternalServerError(e))?;
 

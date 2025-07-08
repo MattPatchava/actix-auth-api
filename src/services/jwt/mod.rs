@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use jsonwebtoken::{encode, EncodingKey, Header};
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, TokenData, Validation};
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
@@ -49,6 +49,20 @@ pub fn generate_jwt(sub: &str, long_lived: &bool) -> Result<String> {
         // An EncodingKey wrapper is used because rather than passing the bytes directly as this
         // provides a uniform interface for different key types (from_secret, from_ec_pem, etc.)
         &EncodingKey::from_secret(secret.as_bytes()),
+    )
+    .map_err(|e| anyhow!(e))
+}
+
+// TokenData is a struct that holds your decoded claims (Claims instance), and a Header instance
+pub fn verify_jwt(token: &str) -> Result<TokenData<Claims>> {
+    let secret: String = std::env::var("JWT_SECRET").map_err(|_| anyhow!("JWT_SECRET not set"))?;
+
+    decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(&secret.as_bytes()),
+        // A Validation struct defines the validation rules when decoding a JWT. The
+        // Validation::default() function returns an instance that assumes HS256
+        &Validation::default(),
     )
     .map_err(|e| anyhow!(e))
 }
