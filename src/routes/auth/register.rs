@@ -2,6 +2,8 @@ use actix_web::{error, web, HttpResponse, Responder};
 use serde::Deserialize;
 use sqlx::PgPool;
 
+use crate::services::hashing;
+
 #[derive(Deserialize)]
 pub struct RegisterPayload {
     email: String,
@@ -19,14 +21,16 @@ pub async fn register(
     let first_name: &str = &payload.first_name;
     let last_name: &str = &payload.last_name;
 
+    let encrypted_password: String = hashing::hash_password(&plaintext_password)
+        .map_err(|e| error::ErrorInternalServerError(e))?;
+
     sqlx::query!(
         r#"
     INSERT INTO users (email, password_hash, first_name, last_name)
     VALUES ($1, $2, $3, $4)
     "#,
         email,
-        // Change this after adding encryption logic
-        plaintext_password,
+        encrypted_password,
         first_name,
         last_name
     )
