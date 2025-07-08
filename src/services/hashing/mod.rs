@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Result};
 use argon2::{
-    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
-    Argon2,
+    password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, SaltString},
+    Argon2, PasswordVerifier,
 };
 
 pub fn hash_password(plaintext: &str) -> Result<String> {
@@ -15,4 +15,13 @@ pub fn hash_password(plaintext: &str) -> Result<String> {
     };
 
     Ok(encoded_hash)
+}
+
+pub fn verify_password(password_input: &str, stored_hash: &str) -> Result<bool> {
+    let parsed_hash: PasswordHash = PasswordHash::new(&stored_hash).map_err(|e| anyhow!(e))?;
+
+    match Argon2::default().verify_password(password_input.as_bytes(), &parsed_hash) {
+        Ok(_) => Ok(true),
+        Err(_) => Ok(false),
+    }
 }
