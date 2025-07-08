@@ -5,6 +5,8 @@ edition = "2024"
 
 [dependencies]
 actix-web = "4.11.0"
+anyhow = "1.0.98"
+argon2 = "0.5.3"
 dotenvy = "0.15.7"
 serde = "1.0.219"
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres"] }
