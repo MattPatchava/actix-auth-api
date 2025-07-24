@@ -1,0 +1,7 @@
+target
+.git
+Dockerfile
+README.md
+LICENSE
+*.swp
+.DS_Store
