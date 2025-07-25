@@ -56,6 +56,23 @@ JWT_SECRET=your_jwt_secret
 
 
 
+## Dockerised Dev 🐳
+
+If you don't have Rust installed or prefer containerised development, you can use the official `rust:slim` Docker image:
+
+```sh
+docker run --rm -v $(pwd):/app -w /app rust:slim cargo run
+```
+
+Optional: Add an alias for convenience:
+
+```bash
+alias drun='docker run --rm -v $(pwd):/app -w /app rust:slim'
+drun cargo run
+```
+
+
+
 ## TODO
 
 - Add refresh token via httpOnly cookie
