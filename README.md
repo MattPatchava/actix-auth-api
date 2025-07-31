@@ -1,3 +1,5 @@
+⚠️ This project is currently paused. It was an exploration of rewriting a previous Express.js JWT authentication backend in Rust using Actix. After implementing the core JWT logic and route structure, I decided to shift focus to projects more aligned with my interests (async networking and system security).
+
 # actix-auth-api
 
 A secure authentication API built with Rust and Actix-Web.

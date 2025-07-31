@@ -46,7 +46,7 @@ pub fn generate_jwt(sub: &str, long_lived: &bool) -> Result<String> {
         // Header::default() initialises a JOSE with default values.
         &Header::default(),
         &claims,
-        // An EncodingKey wrapper is used because rather than passing the bytes directly as this
+        // An EncodingKey wrapper is used rather than passing the bytes directly as this
         // provides a uniform interface for different key types (from_secret, from_ec_pem, etc.)
         &EncodingKey::from_secret(secret.as_bytes()),
     )
